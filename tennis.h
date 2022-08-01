@@ -2,11 +2,12 @@
 #include <stdio.h>
 #include <Windows.h>
 #include <conio.h>
+#include <stdbool.h>
 
 //COURT SIZE
 
-#define COURT_WIDTH 60
-#define COURT_HIGHT 20
+#define COURT_WIDTH_X 60
+#define COURT_HIGHT_Y 20
 
 //COURT DRAW
 #define STARTING_POINT_X 5
@@ -23,13 +24,12 @@
 
 //KEYS
 #define ESC 27
-#define P1_UP 77
-#define P1_DOWN 75
-#define P2_UP 65
-#define P2_DOWN 68
+#define P1_UP 77 //LEFT ARROW
+#define P1_DOWN 75 //RIGHT KEY ARROW
+#define P2_UP 65 //A KEY
+#define P2_DOWN 68 //D KEY
 
 //CHAR
-#define CURSOR 254
 #define EMPTY 32
 
 #define FRAMERATE 16 //16MS IGUAL A 60FPS APROX
@@ -39,12 +39,6 @@ void gotoXY(int, int);
 void drawCourt();
 void printCursor(int, int, char);
 void moveCursor(int, int, int, int, char, char);
-
-//DIRECTION VECTOR
-//direction[0] = x direction[1] = y
-typedef int direction[2];
-
-direction current_dir, previous_dir;
 
 
 void gotoXY(int x, int y) {
@@ -66,22 +60,22 @@ void drawCourt() {
     printf("%c[1;%dm", ESC, 32); // color rojo (32) al caracter impreso
     gotoXY(STARTING_POINT_X, STARTING_POINT_Y);
     
-    for(i = 0; i < COURT_HIGHT + 2; i++) {
-        for(j = 0; j < COURT_WIDTH + 2; j++) {
-            if (j == 0 || j == COURT_WIDTH + 1) {
+    for(i = 0; i < COURT_HIGHT_Y + 2; i++) {
+        for(j = 0; j < COURT_WIDTH_X + 2; j++) {
+            if (j == 0 || j == COURT_WIDTH_X + 1) {
                 switch(i) {
                     case 0: c = UPPER_LEFT_CORNER * (j == 0) +
-                    UPPER_RIGHT_CORNER * (j == COURT_WIDTH + 1);
+                    UPPER_RIGHT_CORNER * (j == COURT_WIDTH_X + 1);
                     break;
-                    case COURT_HIGHT + 1: c = LOWER_LEFT_CORNER * (j == 0) +
-                    LOWER_RIGHT_CORNER * (j == COURT_WIDTH + 1);
+                    case COURT_HIGHT_Y + 1: c = LOWER_LEFT_CORNER * (j == 0) +
+                    LOWER_RIGHT_CORNER * (j == COURT_WIDTH_X + 1);
                     break;
                     default: c = VERTICAL_LINE;
                     break;
                 }
             }
             else {
-                if(i == 0 || i == COURT_HIGHT + 1) {
+                if(i == 0 || i == COURT_HIGHT_Y + 1) {
                     c = HORIZONTAL_LINE;
                 }
                 else {
@@ -89,7 +83,7 @@ void drawCourt() {
                 }
             }
             printf("%c", c);
-            if(j == COURT_WIDTH + 1) {
+            if(j == COURT_WIDTH_X + 1) {
                 gotoXY(STARTING_POINT_X, STARTING_POINT_Y + i + 1);
             }
         }
