@@ -3,11 +3,12 @@
 #include <Windows.h>
 #include <conio.h>
 #include <stdbool.h>
+#include <string.h>
 
 //COURT SIZE
 
-#define COURT_WIDTH_X 60
-#define COURT_HIGHT_Y 20
+#define COURT_WIDTH_X 61
+#define COURT_HIGHT_Y 19
 
 //COURT DRAW
 #define STARTING_POINT_X 5

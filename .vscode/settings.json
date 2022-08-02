@@ -1,5 +1,7 @@
 {
     "files.associations": {
-        "ball.h": "c"
+        "ball.h": "c",
+        "player.h": "c",
+        "tennis.h": "c"
     }
 }
