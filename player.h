@@ -1,4 +1,3 @@
-//#include "ball.h"
 #include "tennis.h"
 
 #define PLAYER 219
@@ -75,9 +74,5 @@ void printPlayer(player new_player) {
     printf("%c", new_player.bottom.part);
 
     printf("%c[0m", ESC);
-}
-
-void playerMovement(player new_player) {
-
 }
 

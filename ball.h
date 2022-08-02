@@ -41,17 +41,18 @@ typedef struct ball {
 Ball createBall(int, int, int, int, int, int);
 void printBall(Ball);
 
-bool ballInUpperOrLowerEdge(Ball);
+bool ballInUpperOrLowerLine(Ball);
+Ball collisionUpperOrLowerLine(Ball);
+
 bool itIsGoal(Ball);
+void goal(Ball);
 
 bool itIsAplayerHit(Ball, player);
 int whatPartOfPlayer(Ball, player);
 void playerHit(Ball, player);
 
-void collisionUpperOrLowerLines(Ball);
-void goal(Ball);
-void ballMovement(Ball);
-void ballAnimation(Ball, player, player);
+Ball ballMovement(Ball);
+Ball ballAnimation(Ball, player, player);
 
 
 Ball createBall(int x, int y, int px, int py, int liX, int liY) {
@@ -69,7 +70,7 @@ Ball createBall(int x, int y, int px, int py, int liX, int liY) {
     return game_ball;
 }
 
-bool ballInUpperOrLowerEdge(Ball new_ball) {
+bool ballInUpperOrLowerLine(Ball new_ball) {
 
     if(new_ball.Y == UPPER_LINE_COLLISION || new_ball.Y == LOWER_LINE_COLLISION) {
         return true;
@@ -77,6 +78,23 @@ bool ballInUpperOrLowerEdge(Ball new_ball) {
     else {
         return false;
     }
+}
+
+Ball collisionUpperOrLowerLine(Ball new_ball) {
+
+    /*switch (new_ball.Y) {
+        case UPPER_LINE_COLLISION: new_ball.last_impact[1] = MOVE_BALL_DOWN;
+        break;
+        case LOWER_LINE_COLLISION: new_ball.last_impact[1] = MOVE_BALL_UP;
+        break;
+    }*/
+
+    switch (new_ball.Y) {
+            case STARTING_POINT_Y + 1: new_ball.last_impact[1] = MOVE_BALL_DOWN;
+            break;
+            case COURT_HIGHT_Y + 5: new_ball.last_impact[1] = MOVE_BALL_UP;
+            break;
+        }
 }
 
 bool itIsGoal(Ball new_ball) {
@@ -89,56 +107,53 @@ bool itIsGoal(Ball new_ball) {
     }
 }
 
+void goal(Ball new_ball) {
+    
+    switch (new_ball.X) {
+        case GOAL_PLAYER1: createBall(SERVE_PLAYER1, STARTING_BALL_POSITION_Y,
+                                      0, 0, MOVE_BALL_RIGHT, MOVE_BALL_MIDDLE);
+        break;
+        case GOAL_PLAYER2: createBall(SERVE_PLAYER2, STARTING_BALL_POSITION_Y,
+                                      0, 0, MOVE_BALL_LEFT, MOVE_BALL_MIDDLE);
+        break;
+    }
+}
+
 bool itIsAplayerHit(Ball new_ball, player player_hitting) {
     
-    if(player_hitting.number == 1) {
-        if(new_ball.X == player_hitting.middle.X + 1 &&
-          (new_ball.Y == player_hitting.top.Y || new_ball.Y == player_hitting.middle.Y || new_ball.Y == player_hitting.bottom.Y)) {
-            return true; 
-        }
-        else {
-            return false;
-        }
+    if(((new_ball.X == PLAYER1_START_POSITION_X + 1) || (new_ball.X == PLAYER2_START_POSITION_X - 1)) &&
+        (new_ball.Y == player_hitting.top.Y || new_ball.Y == player_hitting.middle.Y || new_ball.Y == player_hitting.bottom.Y)) {
+        return true; 
     }
-
-    if(player_hitting.number == 2) {
-        if(new_ball.X == player_hitting.middle.X - 1 &&
-          (new_ball.Y == player_hitting.top.Y || new_ball.Y == player_hitting.middle.Y || new_ball.Y == player_hitting.bottom.Y)) {
-            return true; 
-        }
-        else {
-            return false;
-        }
+    else {
+        return false;
     } 
 }
 
 int whatPartOfPlayer(Ball new_ball, player p) {
     
-    if(p.top.Y == new_ball.Y) {
+    if(new_ball.Y == p.top.Y) {
         return 1;
     }
-    if(p.middle.Y == new_ball.Y) {
+    if(new_ball.Y == p.middle.Y) {
         return 2;
     }
-    if(p.middle.Y == new_ball.Y) {
+    if(new_ball.Y == p.bottom.Y) {
         return 3;
     }
    
 }
 
 void playerHit(Ball new_ball, player player_hitting) {
+        
+    switch (whatPartOfPlayer(new_ball, player_hitting)) {
 
-    int hit = 0;
-    hit = whatPartOfPlayer(new_ball, player_hitting);
-
-    switch (hit) {
         case 1: new_ball.last_impact[1] = MOVE_BALL_UP;
         break;
         case 2: new_ball.last_impact[1] = MOVE_BALL_MIDDLE;
         break;
         case 3: new_ball.last_impact[1] = MOVE_BALL_DOWN;
         break;
-        default: break;
     }
 
     if(player_hitting.number == 1) {
@@ -149,31 +164,8 @@ void playerHit(Ball new_ball, player player_hitting) {
     }
 }
 
-void collisionUpperOrLowerLines(Ball new_ball) {
+Ball ballMovement(Ball new_ball) {
 
-    switch (new_ball.Y) {
-        case UPPER_LINE_COLLISION: new_ball.last_impact[1] = MOVE_BALL_DOWN;
-        break;
-        case LOWER_LINE_COLLISION: new_ball.last_impact[1] = MOVE_BALL_UP;
-        break;
-    }
-}
-
-void goal(Ball new_ball) {
-    
-    switch (new_ball.X) {
-        case GOAL_PLAYER1: new_ball.last_impact[0] = MOVE_BALL_RIGHT,
-                            new_ball.X = SERVE_PLAYER1,
-                            new_ball.Y = STARTING_BALL_POSITION_Y;
-        break;
-        case GOAL_PLAYER2: new_ball.last_impact[0] = MOVE_BALL_LEFT,
-                            new_ball.X = SERVE_PLAYER2,
-                            new_ball.Y = STARTING_BALL_POSITION_Y;
-        break;
-    }
-}
-
-void ballMovement(Ball new_ball) {
     switch (new_ball.last_impact[0]) {
         case MOVE_BALL_LEFT: new_ball.X = new_ball.X + LEFT;
         break;
@@ -189,6 +181,8 @@ void ballMovement(Ball new_ball) {
         case MOVE_BALL_DOWN: new_ball.Y = new_ball.Y + DOWN;
         break;
     }
+
+    return new_ball;
 }
 
 void printBall(Ball new_ball) {
@@ -201,7 +195,7 @@ void printBall(Ball new_ball) {
     gotoXY(0,0);
 }
 
-void ballAnimation(Ball new_ball, player player1, player player2) {
+/*void ballAnimation(Ball new_ball, player player1, player player2) {
     new_ball.previous_X = new_ball.X;
     new_ball.previous_Y = new_ball.Y;
 
@@ -214,15 +208,65 @@ void ballAnimation(Ball new_ball, player player1, player player2) {
         playerHit(new_ball, player2);
     }
 
-    if(ballInUpperOrLowerEdge(new_ball)) {
-        collisionUpperOrLowerLines(new_ball);
+    if(ballInUpperOrLowerLine(new_ball)) {
+        collisionUpperOrLowerLine(new_ball);
+    }
+    
+    
+    printBall(ballMovement(new_ball));
+    Sleep(FRAMERATE);
+}*/
+
+Ball ballAnimation(Ball new_ball, player player1, player player2) {
+    new_ball.previous_X = new_ball.X;
+    new_ball.previous_Y = new_ball.Y;
+    
+    if(itIsGoal(new_ball)) {
+        goal(new_ball);
     }
 
-    ballMovement(new_ball);
+    if(itIsAplayerHit(new_ball, player1) || itIsAplayerHit(new_ball, player2)) {
+        playerHit(new_ball, player1);
+        playerHit(new_ball, player2);
+    }
 
+    if(ballInUpperOrLowerLine(new_ball)) {
+        new_ball = collisionUpperOrLowerLine(new_ball);
+    }
+
+    /*if(ballInUpperOrLowerLine(new_ball)) {
+
+        /*switch (new_ball.Y) {
+            case STARTING_POINT_Y + 1: new_ball.last_impact[1] = MOVE_BALL_DOWN;
+            break;
+            case COURT_HIGHT_Y + 5: new_ball.last_impact[1] = MOVE_BALL_UP;
+            break;
+        }
+        switch (new_ball.Y) {
+            case UPPER_LINE_COLLISION: new_ball.last_impact[1] = MOVE_BALL_DOWN;
+            break;
+            case LOWER_LINE_COLLISION: new_ball.last_impact[1] = MOVE_BALL_UP;
+            break;
+        }
+    }
+    /*switch (new_ball.last_impact[0]) {
+        case MOVE_BALL_LEFT: new_ball.X = new_ball.X + LEFT;
+        break;
+        case MOVE_BALL_RIGHT: new_ball.X = new_ball.X + RIGHT;
+        break;
+    }
+
+    switch (new_ball.last_impact[1]) {
+        case MOVE_BALL_UP: new_ball.Y = new_ball.Y + UP;
+        break;
+        case MOVE_BALL_MIDDLE: new_ball.Y = new_ball.Y + MIDDLE;
+        break;
+        case MOVE_BALL_DOWN: new_ball.Y = new_ball.Y + DOWN;
+        break;
+    }*/
+    new_ball = ballMovement(new_ball);
     printBall(new_ball);
     Sleep(16);
 
+    return new_ball;
 }
-
-
