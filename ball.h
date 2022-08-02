@@ -181,18 +181,9 @@ Ball ballAnimation(Ball new_ball, player player1, player player2) {
     new_ball.previous_X = new_ball.X;
     new_ball.previous_Y = new_ball.Y;
     
-
     if(itIsGoal(new_ball)) {
-        /*switch (new_ball.X) {
-            case GOAL_PLAYER1: new_ball = createBall(SERVE_PLAYER1, STARTING_BALL_POSITION_Y,
-                                        new_ball.previous_X, new_ball.previous_Y, MOVE_BALL_RIGHT, MOVE_BALL_MIDDLE);
-            break;
-            case GOAL_PLAYER2: new_ball = createBall(SERVE_PLAYER2, STARTING_BALL_POSITION_Y,
-                                        new_ball.previous_X, new_ball.previous_Y, MOVE_BALL_LEFT, MOVE_BALL_MIDDLE);
-            break;
-        }*/
-
         new_ball = goal(new_ball);
+        Sleep(1000);
     }
 
 
