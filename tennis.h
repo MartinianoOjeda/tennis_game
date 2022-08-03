@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include <Windows.h>
+#include <windows.h>
 #include <conio.h>
 #include <stdbool.h>
 #include <string.h>
@@ -25,10 +25,6 @@
 
 //KEYS
 #define ESC 27
-#define P1_UP 77 //LEFT ARROW
-#define P1_DOWN 75 //RIGHT KEY ARROW
-#define P2_UP 65 //A KEY
-#define P2_DOWN 68 //D KEY
 
 //CHAR
 #define EMPTY 32
@@ -37,6 +33,7 @@
 #define SPEED 150
 
 void gotoXY(int, int);
+void hideCursor();
 void drawCourt();
 void printCursor(int, int, char);
 void moveCursor(int, int, int, int, char, char);
@@ -44,6 +41,24 @@ void moveCursor(int, int, int, int, char, char);
 
 void gotoXY(int x, int y) {
     printf("%c[%d;%dH", ESC, y, x);
+}
+
+/*void gotoXY(int x, int y) {
+    COORD dwPos;
+    HANDLE hCon;
+
+    dwPos.X = x;
+    dwPos.Y = y;
+
+    SetConsoleCursorPosition(hCon, dwPos);
+}*/
+
+void hideCursor() {
+    CONSOLE_CURSOR_INFO cci;
+    HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+    cci.dwSize = 100;
+    cci.bVisible = FALSE;
+    SetConsoleCursorInfo(consoleHandle, &cci); 
 }
 
 void printCursor(int x, int y, char c) {

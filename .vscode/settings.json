@@ -2,6 +2,7 @@
     "files.associations": {
         "ball.h": "c",
         "player.h": "c",
-        "tennis.h": "c"
+        "tennis.h": "c",
+        "stdio.h": "c"
     }
 }

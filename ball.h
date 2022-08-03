@@ -199,13 +199,15 @@ Ball ballMovement(Ball new_ball) {
 }
 
 void printBall(Ball new_ball) {
-    printf("%c[1;%dm", ESC, new_ball.color);
-    gotoXY(new_ball.previous_X, new_ball.previous_Y);
-    printf("%c", EMPTY);
-    gotoXY(new_ball.X, new_ball.Y);
-    printf("%c", new_ball.appearance);
-    printf("%c[0m", ESC);
-    gotoXY(0,0);
+    
+    if(new_ball.X != new_ball.previous_X || new_ball.Y != new_ball.previous_Y) {
+        printf("%c[1;%dm", ESC, new_ball.color);
+        gotoXY(new_ball.previous_X, new_ball.previous_Y);
+        printf("%c", EMPTY);
+        gotoXY(new_ball.X, new_ball.Y);
+        printf("%c", new_ball.appearance);
+        printf("%c[0m", ESC);
+    }
 }
 
 Ball ballAnimation(Ball new_ball, player player1, player player2) {
@@ -226,7 +228,6 @@ Ball ballAnimation(Ball new_ball, player player1, player player2) {
 
     new_ball = ballMovement(new_ball);
     printBall(new_ball);
-    Sleep(17);
 
     return new_ball;
 }
