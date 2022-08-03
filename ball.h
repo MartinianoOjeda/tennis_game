@@ -70,115 +70,6 @@ Ball createBall(int x, int y, int px, int py, int liX, int liY) {
     return game_ball;
 }
 
-bool ballInUpperOrLowerLine(Ball new_ball) {
-
-    if(new_ball.Y == UPPER_LINE_COLLISION || new_ball.Y == LOWER_LINE_COLLISION) {
-        return true;
-    }
-    else {
-        return false;
-    }
-}
-
-Ball collisionUpperOrLowerLine(Ball new_ball) {
-
-    switch (new_ball.Y) {
-        case UPPER_LINE_COLLISION: new_ball.last_impact[1] = MOVE_BALL_DOWN;
-        break;
-        case LOWER_LINE_COLLISION: new_ball.last_impact[1] = MOVE_BALL_UP;
-        break;
-    }
-
-    return new_ball;
-}
-
-bool itIsGoal(Ball new_ball) {
-    if((new_ball.X == GOAL_PLAYER1) || (new_ball.X == GOAL_PLAYER2)) {
-        return true;
-    }
-    else {
-        return false;
-    }
-}
-
-Ball goal(Ball new_ball) {
-    switch (new_ball.X) {
-        case GOAL_PLAYER1: new_ball.X = 8, new_ball.Y = 15, new_ball.last_impact[0] = MOVE_BALL_RIGHT, new_ball.last_impact[1] = MOVE_BALL_MIDDLE;/*createBall(SERVE_PLAYER1, STARTING_BALL_POSITION_Y,
-                                    new_ball.previous_X, new_ball.previous_Y, MOVE_BALL_RIGHT, MOVE_BALL_MIDDLE);*/
-        break;
-        case GOAL_PLAYER2: new_ball.X = 65, new_ball.Y = 15, new_ball.last_impact[0] = MOVE_BALL_LEFT, new_ball.last_impact[1] = MOVE_BALL_MIDDLE; /*createBall(SERVE_PLAYER2, STARTING_BALL_POSITION_Y,
-                                    new_ball.previous_X, new_ball.previous_Y, MOVE_BALL_LEFT, MOVE_BALL_MIDDLE);*/
-        break;
-    }
-
-    return new_ball;
-}
-
-Ball ballMovement(Ball new_ball) {
-
-    switch (new_ball.last_impact[0]) {
-        case MOVE_BALL_LEFT: new_ball.X = new_ball.X + LEFT;
-        break;
-        case MOVE_BALL_RIGHT: new_ball.X = new_ball.X + RIGHT;
-        break;
-    }
-
-    switch (new_ball.last_impact[1]) {
-        case MOVE_BALL_UP: new_ball.Y = new_ball.Y + UP;
-        break;
-        case MOVE_BALL_MIDDLE: new_ball.Y = new_ball.Y + MIDDLE;
-        break;
-        case MOVE_BALL_DOWN: new_ball.Y = new_ball.Y + DOWN;
-        break;
-    }
-
-    return new_ball;
-}
-
-void printBall(Ball new_ball) {
-    printf("%c[1;%dm", ESC, new_ball.color);
-    gotoXY(new_ball.previous_X, new_ball.previous_Y);
-    printf("%c", EMPTY);
-    gotoXY(new_ball.X, new_ball.Y);
-    printf("%c", new_ball.appearance);
-    printf("%c[0m", ESC);
-    gotoXY(0,0);
-}
-
-Ball ballAnimation(Ball new_ball, player player1, player player2) {
-    new_ball.previous_X = new_ball.X;
-    new_ball.previous_Y = new_ball.Y;
-    
-    if(itIsGoal(new_ball)) {
-        new_ball = goal(new_ball);
-        Sleep(1000);
-    }
-
-    /*if((new_ball.X == player1.middle.X + 1 || new_ball.X == player2.middle.X - 1) && 
-       (((new_ball.Y == player1.top.Y) || (new_ball.Y == player2.top.Y)) ||
-        ((new_ball.Y == player1.middle.Y)||(new_ball.Y == player2.middle.Y)) ||
-        ((new_ball.Y == player1.bottom.Y)||(new_ball.Y == player2.bottom.Y)))) {
-            
-            new_ball.last_impact[0] = MOVE_BALL_RIGHT;
-            if(new_ball.X == player2.middle.X - 1) {
-                new_ball.last_impact[0] = MOVE_BALL_LEFT;
-            }
-    }*/
-
-    new_ball = playerHit(new_ball, player1);
-    new_ball = playerHit(new_ball, player2);
-
-    if(ballInUpperOrLowerLine(new_ball)) {
-        new_ball = collisionUpperOrLowerLine(new_ball);
-    }
-
-    new_ball = ballMovement(new_ball);
-    printBall(new_ball);
-    Sleep(100);
-
-    return new_ball;
-}
-
 int playerOneOrTwo(Ball new_ball, player player_hitting) {
     if((new_ball.X == player_hitting.middle.X + 1) && (new_ball.X == PLAYER1_START_POSITION_X + 1)) {
 
@@ -240,4 +131,102 @@ Ball playerHit(Ball new_ball, player player_hitting) {
     else {
         return new_ball;
     }
+}
+
+bool itIsGoal(Ball new_ball) {
+    if((new_ball.X == GOAL_PLAYER1) || (new_ball.X == GOAL_PLAYER2)) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
+Ball goal(Ball new_ball) {
+    switch (new_ball.X) {
+        case GOAL_PLAYER1: new_ball.X = SERVE_PLAYER1, new_ball.Y = STARTING_BALL_POSITION_Y, new_ball.last_impact[0] = MOVE_BALL_RIGHT, new_ball.last_impact[1] = MOVE_BALL_MIDDLE;/*createBall(SERVE_PLAYER1, STARTING_BALL_POSITION_Y,
+                                    new_ball.previous_X, new_ball.previous_Y, MOVE_BALL_RIGHT, MOVE_BALL_MIDDLE);*/
+        break;
+        case GOAL_PLAYER2: new_ball.X = SERVE_PLAYER2, new_ball.Y = STARTING_BALL_POSITION_Y, new_ball.last_impact[0] = MOVE_BALL_LEFT, new_ball.last_impact[1] = MOVE_BALL_MIDDLE; /*createBall(SERVE_PLAYER2, STARTING_BALL_POSITION_Y,
+                                    new_ball.previous_X, new_ball.previous_Y, MOVE_BALL_LEFT, MOVE_BALL_MIDDLE);*/
+        break;
+    }
+
+    return new_ball;
+}
+
+bool ballInUpperOrLowerLine(Ball new_ball) {
+
+    if(new_ball.Y == UPPER_LINE_COLLISION || new_ball.Y == LOWER_LINE_COLLISION) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
+Ball collisionUpperOrLowerLine(Ball new_ball) {
+
+    switch (new_ball.Y) {
+        case UPPER_LINE_COLLISION: new_ball.last_impact[1] = MOVE_BALL_DOWN;
+        break;
+        case LOWER_LINE_COLLISION: new_ball.last_impact[1] = MOVE_BALL_UP;
+        break;
+    }
+
+    return new_ball;
+}
+
+Ball ballMovement(Ball new_ball) {
+
+    switch (new_ball.last_impact[0]) {
+        case MOVE_BALL_LEFT: new_ball.X = new_ball.X + LEFT;
+        break;
+        case MOVE_BALL_RIGHT: new_ball.X = new_ball.X + RIGHT;
+        break;
+    }
+
+    switch (new_ball.last_impact[1]) {
+        case MOVE_BALL_UP: new_ball.Y = new_ball.Y + UP;
+        break;
+        case MOVE_BALL_MIDDLE: new_ball.Y = new_ball.Y + MIDDLE;
+        break;
+        case MOVE_BALL_DOWN: new_ball.Y = new_ball.Y + DOWN;
+        break;
+    }
+
+    return new_ball;
+}
+
+void printBall(Ball new_ball) {
+    printf("%c[1;%dm", ESC, new_ball.color);
+    gotoXY(new_ball.previous_X, new_ball.previous_Y);
+    printf("%c", EMPTY);
+    gotoXY(new_ball.X, new_ball.Y);
+    printf("%c", new_ball.appearance);
+    printf("%c[0m", ESC);
+    gotoXY(0,0);
+}
+
+Ball ballAnimation(Ball new_ball, player player1, player player2) {
+    new_ball.previous_X = new_ball.X;
+    new_ball.previous_Y = new_ball.Y;
+    
+    new_ball = playerHit(new_ball, player1);
+    new_ball = playerHit(new_ball, player2);
+
+    if(itIsGoal(new_ball)) {
+        new_ball = goal(new_ball);
+        Sleep(1000);
+    }
+
+    if(ballInUpperOrLowerLine(new_ball)) {
+        new_ball = collisionUpperOrLowerLine(new_ball);
+    }
+
+    new_ball = ballMovement(new_ball);
+    printBall(new_ball);
+    Sleep(17);
+
+    return new_ball;
 }
