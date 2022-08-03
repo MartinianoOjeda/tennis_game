@@ -21,7 +21,7 @@
 #define GOAL_PLAYER1 66
 #define GOAL_PLAYER2 6
 
-#define SERVE_PLAYER1 7
+#define SERVE_PLAYER1 8
 #define SERVE_PLAYER2 65
 
 #define UPPER_LINE_COLLISION 6
@@ -43,12 +43,14 @@ void printBall(Ball);
 
 bool ballInUpperOrLowerLine(Ball);
 
+Ball whatPartItIs(Ball, player);
 bool itIsAplayerHit(Ball, player);
 int whatPartOfPlayer(Ball, player);
 void playerHit(Ball, player);
 
 bool itIsGoal(Ball);
 Ball goal(Ball);
+
 
 Ball ballMovement(Ball);
 Ball ballAnimation(Ball, player, player);
@@ -135,11 +137,11 @@ bool itIsGoal(Ball new_ball) {
 
 Ball goal(Ball new_ball) {
     switch (new_ball.X) {
-        case GOAL_PLAYER1: new_ball = createBall(SERVE_PLAYER1, STARTING_BALL_POSITION_Y,
-                                    new_ball.previous_X, new_ball.previous_Y, MOVE_BALL_RIGHT, MOVE_BALL_MIDDLE);
+        case GOAL_PLAYER1: new_ball.X = 8, new_ball.Y = 15, new_ball.last_impact[0] = MOVE_BALL_RIGHT, new_ball.last_impact[1] = MOVE_BALL_MIDDLE;/*createBall(SERVE_PLAYER1, STARTING_BALL_POSITION_Y,
+                                    new_ball.previous_X, new_ball.previous_Y, MOVE_BALL_RIGHT, MOVE_BALL_MIDDLE);*/
         break;
-        case GOAL_PLAYER2: new_ball = createBall(SERVE_PLAYER2, STARTING_BALL_POSITION_Y,
-                                    new_ball.previous_X, new_ball.previous_Y, MOVE_BALL_LEFT, MOVE_BALL_MIDDLE);
+        case GOAL_PLAYER2: new_ball.X = 65, new_ball.Y = 15, new_ball.last_impact[0] = MOVE_BALL_LEFT, new_ball.last_impact[1] = MOVE_BALL_MIDDLE; /*createBall(SERVE_PLAYER2, STARTING_BALL_POSITION_Y,
+                                    new_ball.previous_X, new_ball.previous_Y, MOVE_BALL_LEFT, MOVE_BALL_MIDDLE);*/
         break;
     }
 
@@ -177,6 +179,55 @@ void printBall(Ball new_ball) {
     gotoXY(0,0);
 }
 
+Ball whatPartItIs(Ball new_ball, player player_hitting) {
+
+    if(player_hitting.number == 1) {
+
+        new_ball.last_impact[0] = MOVE_BALL_RIGHT;
+
+        if(new_ball.X == player_hitting.middle.X + 2) {
+            if(new_ball.Y == player_hitting.top.Y) {
+
+                new_ball.last_impact[1] = MOVE_BALL_UP;
+            }
+            else{
+                if(new_ball.Y == player_hitting.middle.Y) {
+                   new_ball.last_impact[1] = MOVE_BALL_MIDDLE; 
+                }
+                else{
+                    if(new_ball.Y == player_hitting.bottom.Y) {
+                        new_ball.last_impact[1] = MOVE_BALL_DOWN;
+                    }
+                }
+            }
+        }
+    }
+
+    if(player_hitting.number == 2) {
+
+        new_ball.last_impact[0] = MOVE_BALL_LEFT;
+
+        if(new_ball.X == player_hitting.middle.X - 2) {
+            if(new_ball.Y == player_hitting.top.Y) {
+
+                new_ball.last_impact[1] = MOVE_BALL_UP;
+            }
+            else{
+                if(new_ball.Y == player_hitting.middle.Y) {
+                   new_ball.last_impact[1] = MOVE_BALL_MIDDLE; 
+                }
+                else{
+                    if(new_ball.Y == player_hitting.bottom.Y) {
+                        new_ball.last_impact[1] = MOVE_BALL_DOWN;
+                    }
+                }
+            }
+        }
+    }
+    
+    return new_ball;
+}
+
 Ball ballAnimation(Ball new_ball, player player1, player player2) {
     new_ball.previous_X = new_ball.X;
     new_ball.previous_Y = new_ball.Y;
@@ -186,10 +237,17 @@ Ball ballAnimation(Ball new_ball, player player1, player player2) {
         Sleep(1000);
     }
 
-
-    if(itIsAplayerHit(new_ball, player1) || itIsAplayerHit(new_ball, player2)) {
-        playerHit(new_ball, player1);
-        playerHit(new_ball, player2);
+    /*new_ball = whatPartItIs(new_ball, player1);
+    new_ball = whatPartItIs(new_ball, player2);*/
+    if((new_ball.X == player1.middle.X + 1 || new_ball.X == player2.middle.X - 1) && 
+       (((new_ball.Y == player1.top.Y) || (new_ball.Y == player2.top.Y)) ||
+        ((new_ball.Y == player1.middle.Y)||(new_ball.Y == player2.middle.Y)) ||
+        ((new_ball.Y == player1.bottom.Y)||(new_ball.Y == player2.bottom.Y)))) {
+            
+            new_ball.last_impact[0] = MOVE_BALL_RIGHT;
+            if(new_ball.X == player2.middle.X - 1) {
+                new_ball.last_impact[0] = MOVE_BALL_LEFT;
+            }
     }
 
     if(ballInUpperOrLowerLine(new_ball)) {
@@ -204,7 +262,7 @@ Ball ballAnimation(Ball new_ball, player player1, player player2) {
 
     new_ball = ballMovement(new_ball);
     printBall(new_ball);
-    Sleep(16);
+    Sleep(100);
 
     return new_ball;
 }

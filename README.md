@@ -1,1 +1,1 @@
-# tennis_game
+Juego codificado en C que intenta emular al famoso PONG de Atari

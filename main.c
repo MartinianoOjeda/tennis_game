@@ -14,7 +14,7 @@ int main() {
     player1 = createPlayer(1, "Player");
     player2 = createPlayer(2, "Player");
 
-    new_ball = createBall(STARTING_BALL_POSITION_X, STARTING_BALL_POSITION_Y, 0, 0, MOVE_BALL_LEFT, MOVE_BALL_UP);
+    new_ball = createBall(STARTING_BALL_POSITION_X, STARTING_BALL_POSITION_Y, 0, 0, MOVE_BALL_RIGHT, MOVE_BALL_UP);
     
     while(!game_over) {
         
