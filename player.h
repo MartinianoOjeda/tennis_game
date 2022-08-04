@@ -29,11 +29,7 @@ typedef struct players {
 
 player createPlayer(int, name, int);
 void printPlayer(player);
-void playerMovement(player);
-player controllPlayer1(int, player);
-player controllPlayer2(int, player);
-player controllPlayers(int, player);
-player animationPlayers(int, player);
+player playersAnimation(int, player);
 
 
 player createPlayer(int number, name player_name, int color) {
@@ -88,72 +84,26 @@ void printPlayer(player new_player) {
     printf("%c[0m", ESC);
 }
 
-player controllPlayer1(int key, player p1) {
-    if(key == P1_UP) {
-        p1.bottom.Y = p1.bottom.Y - 1;
-        p1.middle.Y = p1.middle.Y - 1;
-        p1.top.Y = p1.top.Y - 1;
-
-        return p1;
+player playersAnimation(int key, player p) {
+    if(p.middle.Y != p.middle.previous_Y) {
+            p.top.previous_Y = p.top.Y;
+            p.middle.previous_Y = p.middle.Y;
+            p.bottom.previous_Y = p.bottom.Y;
     }
-    else {
-        if(key == P1_DOWN) {
-            p1.bottom.Y = p1.bottom.Y + 1;
-            p1.middle.Y = p1.middle.Y + 1;
-            p1.top.Y = p1.top.Y + 1;
-
-            return p1;
-        }
-        else {
-            return p1;
-        }
-    }
-}
-
-player controllPlayer2(int key, player p2) {
-    if(key == P2_UP) {
-        p2.bottom.Y = p2.bottom.Y - 1;
-        p2.middle.Y = p2.middle.Y - 1;
-        p2.top.Y = p2.top.Y - 1;
-
-        return p2;
-    }
-    else {
-        if(key == P2_DOWN) {
-            p2.bottom.Y = p2.bottom.Y + 1;
-            p2.middle.Y = p2.middle.Y + 1;
-            p2.top.Y = p2.top.Y + 1;
-
-            return p2;
-        }
-        else {
-            return p2;
-        }
-    }
-}
-
-player controllPlayers(int key, player p) {
 
     if(key != 0) {
-        p = controllPlayer1(key, p);
-        p = controllPlayer2(key, p);
-
-        return p;
-    }
-    else {
-        return p;
-    }
-}
-
-player animationPlayers(int key, player p) {
-
-    if(p.middle.Y != p.middle.previous_Y) {
-        p.top.previous_Y = p.top.Y;
-        p.middle.previous_Y = p.middle.Y;
-        p.bottom.previous_Y = p.bottom.Y;
+        if(key == P1_UP || key == P2_UP) {
+            p.bottom.Y = p.bottom.Y - 1;
+            p.middle.Y = p.middle.Y - 1;
+            p.top.Y = p.top.Y - 1;
+        }
+        
+        if(key == P1_DOWN || key == P2_DOWN) {
+            p.bottom.Y = p.bottom.Y + 1;
+            p.middle.Y = p.middle.Y + 1;
+            p.top.Y = p.top.Y + 1;
+        }
     }
 
-    p = controllPlayers(key,p);
-
-    printPlayer(p);
+    return p;
 }

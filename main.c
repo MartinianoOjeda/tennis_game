@@ -4,8 +4,8 @@ int main() {
     int game_over = 0;
     int time = 0;
     char key = 0;
-    Ball new_ball;
-    player player1, player2;
+    Ball b;
+    player p1, p2;
 
     system("cls");
     
@@ -13,10 +13,9 @@ int main() {
 
     drawCourt();
     
-    player1 = createPlayer(1, "Player", COLOR_PLAYER1);
-    player2 = createPlayer(2, "Player", COLOR_PLAYER2);
-    new_ball = createBall(STARTING_BALL_POSITION_X, STARTING_BALL_POSITION_Y,
-               STARTING_BALL_POSITION_X, STARTING_BALL_POSITION_Y, MOVE_BALL_RIGHT, MOVE_BALL_UP);
+    p1 = createPlayer(1, "Player", COLOR_PLAYER1);
+    p2 = createPlayer(2, "Player", COLOR_PLAYER2);
+    b = createBall(STARTING_BALL_POSITION_X, STARTING_BALL_POSITION_Y, 0, 0, MOVE_BALL_RIGHT, MOVE_BALL_UP);
 
     while(!game_over) {
 
@@ -27,9 +26,16 @@ int main() {
             game_over = (key == ESC);
         }
         
-        player1 = animationPlayers(key, player1);
-        player2 = animationPlayers(key, player2);
-        new_ball = ballAnimation(new_ball, player1, player2);
+        if(key == P1_UP || key == P1_DOWN) {
+            p1 = playersAnimation(key, p1);
+        }
+        if(key == P2_UP || key == P2_DOWN) {
+            p2 = playersAnimation(key, p2);
+        }
+        
+        b = ballAnimation(b, p1, p2);
+        printPlayer(p1);
+        printPlayer(p2);
         Sleep(FRAMERATE);
     }
     

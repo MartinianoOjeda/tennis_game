@@ -36,22 +36,10 @@ void gotoXY(int, int);
 void hideCursor();
 void drawCourt();
 void printCursor(int, int, char);
-void moveCursor(int, int, int, int, char, char);
-
 
 void gotoXY(int x, int y) {
     printf("%c[%d;%dH", ESC, y, x);
 }
-
-/*void gotoXY(int x, int y) {
-    COORD dwPos;
-    HANDLE hCon;
-
-    dwPos.X = x;
-    dwPos.Y = y;
-
-    SetConsoleCursorPosition(hCon, dwPos);
-}*/
 
 void hideCursor() {
     CONSOLE_CURSOR_INFO cci;
@@ -105,11 +93,4 @@ void drawCourt() {
         }
     }
     printf("%c[0m", ESC); //reestablece el color por defecto de la consola*/
-}
-
-void moveCursor(int x, int px, int y, int py, char c, char pc) {
-    gotoXY(px, py);
-    printf("%c", pc);
-    printCursor(x, y, c);
-
 }
