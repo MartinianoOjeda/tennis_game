@@ -4,11 +4,15 @@ int main() {
     int game_over = 0;
     int time = 0;
     char key = 0;
+    int score1 = 0;
+    int score2 = 0;
     Ball b;
     player p1, p2;
 
     system("cls");
     
+    gameWindowSize(2000, 200);
+
     hideCursor();
 
     drawCourt();
@@ -34,8 +38,20 @@ int main() {
         }
         
         b = ballAnimation(b, p1, p2);
+
+        if(b.goal == 1) {
+            score1 += 1;
+        }
+        if(b.goal == 2) {
+            score2 += 1;
+        }
+        b.goal = 0;
+
+
         printPlayer(p1);
         printPlayer(p2);
+        printScore(STARTING_POINT_X + 1, STARTING_POINT_Y + 1, score1, COLOR_PLAYER1);
+        printScore(COURT_WIDTH_X - 3,STARTING_POINT_Y + 1, score2, COLOR_PLAYER2);
         Sleep(FRAMERATE);
     }
     

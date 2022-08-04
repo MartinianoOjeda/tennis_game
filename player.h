@@ -1,8 +1,6 @@
 #include "tennis.h"
 
 #define PLAYER 219
-#define COLOR_PLAYER1 31
-#define COLOR_PLAYER2 34
 
 #define PLAYER1_START_POSITION_X 6
 #define PLAYER2_START_POSITION_X 66

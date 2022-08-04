@@ -34,7 +34,7 @@ typedef int direction[2];
 direction current_dir, previous_dir;
 
 typedef struct ball {
-    int X, Y, previous_X, previous_Y, appearance, color;
+    int X, Y, previous_X, previous_Y, appearance, color, goal;
     direction last_impact;
 } Ball;
 
@@ -66,6 +66,7 @@ Ball createBall(int x, int y, int px, int py, int liX, int liY) {
     game_ball.last_impact[1] = liY; 
     game_ball.appearance = BALL;
     game_ball.color = COLOR_BALL;
+    game_ball.goal = 0;
 
     return game_ball;
 }
@@ -144,11 +145,13 @@ bool itIsGoal(Ball new_ball) {
 
 Ball goal(Ball new_ball) {
     switch (new_ball.X) {
-        case GOAL_PLAYER1: new_ball.X = SERVE_PLAYER1, new_ball.Y = STARTING_BALL_POSITION_Y, new_ball.last_impact[0] = MOVE_BALL_RIGHT, new_ball.last_impact[1] = MOVE_BALL_MIDDLE;/*createBall(SERVE_PLAYER1, STARTING_BALL_POSITION_Y,
-                                    new_ball.previous_X, new_ball.previous_Y, MOVE_BALL_RIGHT, MOVE_BALL_MIDDLE);*/
+        case GOAL_PLAYER1: new_ball.X = SERVE_PLAYER1, new_ball.Y = STARTING_BALL_POSITION_Y,
+                           new_ball.last_impact[0] = MOVE_BALL_RIGHT, new_ball.last_impact[1] = MOVE_BALL_MIDDLE,
+                           new_ball.goal = 1;
         break;
-        case GOAL_PLAYER2: new_ball.X = SERVE_PLAYER2, new_ball.Y = STARTING_BALL_POSITION_Y, new_ball.last_impact[0] = MOVE_BALL_LEFT, new_ball.last_impact[1] = MOVE_BALL_MIDDLE; /*createBall(SERVE_PLAYER2, STARTING_BALL_POSITION_Y,
-                                    new_ball.previous_X, new_ball.previous_Y, MOVE_BALL_LEFT, MOVE_BALL_MIDDLE);*/
+        case GOAL_PLAYER2: new_ball.X = SERVE_PLAYER2, new_ball.Y = STARTING_BALL_POSITION_Y,
+                           new_ball.last_impact[0] = MOVE_BALL_LEFT, new_ball.last_impact[1] = MOVE_BALL_MIDDLE,
+                           new_ball.goal = 2;
         break;
     }
 

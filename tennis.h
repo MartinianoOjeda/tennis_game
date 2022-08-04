@@ -32,10 +32,16 @@
 #define FRAMERATE 16 //16MS IGUAL A 60FPS APROX
 #define SPEED 150
 
+#define COLOR_PLAYER1 31
+#define COLOR_PLAYER2 34
+
 void gotoXY(int, int);
 void hideCursor();
+void gameWindowSize(int, int);
 void drawCourt();
 void printCursor(int, int, char);
+
+void printScore(int, int, int, int);
 
 void gotoXY(int x, int y) {
     printf("%c[%d;%dH", ESC, y, x);
@@ -48,6 +54,14 @@ void hideCursor() {
     cci.bVisible = FALSE;
     SetConsoleCursorInfo(consoleHandle, &cci); 
 }
+
+void gameWindowSize(x, y) {
+    HANDLE wHnd;
+    wHnd = GetStdHandle(STD_OUTPUT_HANDLE);
+    SMALL_RECT windowSize = {0, 0, x, y};
+    SetConsoleWindowInfo(wHnd, 1, &windowSize);
+}
+
 
 void printCursor(int x, int y, char c) {
     printf("%c[1;%dm", ESC, 32); // color rojo (32) al caracter impreso
@@ -93,4 +107,11 @@ void drawCourt() {
         }
     }
     printf("%c[0m", ESC); //reestablece el color por defecto de la consola*/
+}
+
+void printScore(int x, int y, int s, int c) {
+    printf("%c[1;%dm", ESC, c);
+    gotoXY(x, y - 2);
+    printf("SCORE: %d", s);
+    printf("%c[0m", ESC);
 }
